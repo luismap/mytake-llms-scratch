@@ -15,6 +15,11 @@
 * input embeddings ![alt text](images/input_embed.png)
 * ![alt text](images/embedding_pipeline.png)
 
+# about self attention
+* self attention mechanism ![alt text](images/self_attention.png)
+* about RNNs p.67 ![alt text](images/rnns.png)
+* rnns continuation ![alt text](images/rnns_cont.png)
+
 
 # notes
 * **about embeddings**: while word embeddings are the most common form of text embedding, there are also
