@@ -20,6 +20,18 @@
 * about RNNs p.67 ![alt text](images/rnns.png)
 * rnns continuation ![alt text](images/rnns_cont.png)
 
+# about different LLms arch
+* multihead vs grouped query attention ![alt text](images/mh_gqa.png)
+* multihead latent attention (mla) ![alt text](images/mla.png)
+* mixture of experts (MoE) ![alt text](images/mixture_of_experts.png)
+* types of MoE ![alt text](images/moe.png)
+* post-normalization, pre-norm, and olmo ![alt text](imags/prolmo.png)
+* llama3 vs olmo2 ![alt text](images/llama_olmo.png)
+* sliding attention (in the gemma models) vs normal ![alt text](images/sliding_attn.png)
+* olmo vs gemma3 arch comparison ![alt text](images/olmo_vs_gemma3.png)
+* gemma3 vs mistral 3.1 arch ![alt text](images/gemma_mistral.png)
+* llama3.2 vs qwen3 ![alt text](images/llama_qwen.png)
+
 
 # notes
 * **about embeddings**: while word embeddings are the most common form of text embedding, there are also
