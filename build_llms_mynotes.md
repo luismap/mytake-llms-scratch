@@ -21,6 +21,7 @@
 * rnns continuation ![alt text](images/rnns_cont.png)
 
 # about different LLms arch
+note: base on [article](https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison)
 * multihead vs grouped query attention ![alt text](images/mh_gqa.png)
 * multihead latent attention (mla) ![alt text](images/mla.png)
 * mixture of experts (MoE) ![alt text](images/mixture_of_experts.png)
@@ -31,7 +32,10 @@
 * olmo vs gemma3 arch comparison ![alt text](images/olmo_vs_gemma3.png)
 * gemma3 vs mistral 3.1 arch ![alt text](images/gemma_mistral.png)
 * llama3.2 vs qwen3 ![alt text](images/llama_qwen.png)
-
+* deepseekv3 vs Qwen3 ![alt text](images/deepseekv3_qwen3.png)
+* smollm3 vs qwen3 ![alt text](images/smollm3_qwen3.png)
+* about NoPE(no positional encodings)![alt text](images/nope.png)
+* gptoss ![alt text](images/gptoss.png)
 
 # notes
 * **about embeddings**: while word embeddings are the most common form of text embedding, there are also
