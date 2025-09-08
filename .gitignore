@@ -1,2 +1,4 @@
 # locals
 *.pdf
+.DS_Store
+LLMs-from-scratch
