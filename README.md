@@ -19,6 +19,45 @@
 * self attention mechanism ![alt text](images/self_attention.png)
 * about RNNs p.67 ![alt text](images/rnns.png)
 * rnns continuation ![alt text](images/rnns_cont.png)
+* note on scaled dot product attention ![alt text](images/scaled_dot_product.png)
+* about q,k,w matrices ![alt text](images/about_qkv.png)
+```python
+# a simple implementation of the attention mechanism
+class SelfAttention_v1(nn.Module):
+
+    def __init__(self, d_in, d_out):
+        super().__init__()
+        self.W_query = nn.Parameter(torch.rand(d_in, d_out))
+        self.W_key   = nn.Parameter(torch.rand(d_in, d_out))
+        self.W_value = nn.Parameter(torch.rand(d_in, d_out))
+        """
+        note: you should use nn.Linear
+        because it give weight_initialization, and __apply__ defaults to matrix multplication
+        when bias unit disabled.
+        ex.
+        self.W_query = nn.Linear(d_in, d_out, bias=qkv_bias)
+        queries = self.W_query(x)
+        """
+
+    def forward(self, x):
+        keys = x @ self.W_key
+        queries = x @ self.W_query
+        values = x @ self.W_value
+        
+        attn_scores = queries @ keys.T # omega
+        attn_weights = torch.softmax(
+            attn_scores / keys.shape[-1]**0.5, dim=-1
+        )
+
+        context_vec = attn_weights @ values
+        return context_vec
+
+torch.manual_seed(123)
+sa_v1 = SelfAttention_v1(d_in, d_out)
+print(sa_v1(inputs))
+```
+* summarization of the simple self attention mechanism ![alt text](images/self_attn_summary.png)
+
 
 # about different LLms arch
 note: base on [article](https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison)
