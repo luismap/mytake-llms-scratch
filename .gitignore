@@ -2,3 +2,4 @@
 *.pdf
 .DS_Store
 LLMs-from-scratch
+__pycache__
