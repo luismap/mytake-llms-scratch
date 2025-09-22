@@ -3,9 +3,21 @@
 # This file can be run as a standalone script.
 
 import time
+from turtle import color
 import tiktoken
 import torch
 import torch.nn as nn
+import sys
+sys.path.append("../..")
+
+from utils.text import colorize
+
+MY_DEBUG = False
+
+"""
+note: when computing just next token, after first pass, entire masked attention
+will always be false, so no need for that operation, investigate?
+"""
 
 
 #####################################
@@ -30,6 +42,9 @@ class MultiHeadAttention(nn.Module):
             torch.triu(torch.ones(context_length, context_length), diagonal=1),
             persistent=False
         )
+
+        if MY_DEBUG:
+            colorize("context lenght", self.mask.shape)
 
         ####################################################
         # NEW
@@ -77,9 +92,15 @@ class MultiHeadAttention(nn.Module):
         num_tokens_Q = queries.shape[-2]
         num_tokens_K = keys.shape[-2]
         if use_cache:
+            #choose for masking only current row + new_tokens
+            #since we already computed/cached previous
+            
             mask_bool = self.mask.bool()[
                 self.ptr_current_pos:self.ptr_current_pos + num_tokens_Q, :num_tokens_K
             ]
+            if MY_DEBUG:
+                colorize("current attention_score", attn_scores)
+                colorize("current bool mask",mask_bool)
             self.ptr_current_pos += num_tokens_Q
         ####################################################
         # Original mask truncated to the number of tokens and converted to boolean
@@ -88,6 +109,8 @@ class MultiHeadAttention(nn.Module):
 
         # Use the mask to fill attention scores
         attn_scores.masked_fill_(mask_bool, -torch.inf)
+        if MY_DEBUG:
+            colorize("atten_score_masked", attn_scores)
 
         attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
         attn_weights = self.dropout(attn_weights)
@@ -310,15 +333,15 @@ def main():
         "vocab_size": 50257,     # Vocabulary size
         "context_length": 1024,  # Context length
         "emb_dim": 768,          # Embedding dimension
-        "n_heads": 12,           # Number of attention heads
-        "n_layers": 12,          # Number of layers
+        "n_heads": 2,           # Number of attention heads, def=12
+        "n_layers": 1,          # Number of layers, def=12
         "drop_rate": 0.1,        # Dropout rate
         "qkv_bias": False        # Query-Key-Value bias
     }
 
     torch.manual_seed(123)
     model = GPTModel(GPT_CONFIG_124M)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.mps.is_available() else "cpu")
     model.to(device)
     model.eval()  # disable dropout
 
@@ -333,8 +356,8 @@ def main():
     print("Encoded input text:", encoded)
     print("encoded_tensor.shape:", encoded_tensor.shape)
 
-    if torch.cuda.is_available():
-        torch.cuda.synchronize()
+    if torch.mps.is_available():
+        torch.mps.synchronize()
     start = time.time()
 
     # token_ids = generate_text_simple(
@@ -349,12 +372,12 @@ def main():
     token_ids = generate_text_simple_cached(
         model=model,
         idx=encoded_tensor,
-        max_new_tokens=200,
+        max_new_tokens=2, #orignal val 200
     )
     ####################################################
 
-    if torch.cuda.is_available():
-        torch.cuda.synchronize()
+    if torch.mps.is_available():
+        torch.mps.synchronize()
     total_time = time.time() - start
 
     decoded_text = tokenizer.decode(token_ids.squeeze(0).tolist())
