@@ -1,6 +1,18 @@
 import torch
 import torch.nn as nn
 
+def model_size(model_params, bits: int = 32):
+    """
+    Docstring for model_size
+
+    :param model_params: Description
+    :param bits: 32 for float 32, 16 for float 16, ect
+    """
+    param_bytes = bits // 8
+    total_size_bytes = model_params * param_bytes
+    # Convert to gigabytes
+    total_size_mb = total_size_bytes / (1024 * 1024 * 1024)
+    return total_size_mb
 
 class LayerNorm(nn.Module):
     def __init__(self, emb_dim):
